@@ -8,7 +8,7 @@ import (
 
 const (
 	outDir       = "../dist"
-	templatesDir = "../templates"
+	templatesDir = "../src/templates"
 )
 
 func main() {
