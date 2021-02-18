@@ -7,7 +7,9 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require("terser-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const { ProgressPlugin, HotModuleReplacementPlugin } = webpack;
+const { ProgressPlugin } = webpack;
+
+const devMode = process.env.NODE_ENV !== 'production';
 
 const buildPath = path.resolve(__dirname, 'build')
 
@@ -20,20 +22,26 @@ const plugins = [
     cleanOnceBeforeBuildPatterns: ['**/*', '!static-files*'],
   }),
   new MiniCssExtractPlugin({
-    filename: "[name].[contenthash].css"
+    filename: !devMode ? "[name].[contenthash].css" : "[name].css",
   })
 ];
 
 module.exports = {
   plugins,
   devtool: "eval-cheap-module-source-map",
+  target: 'web',
+  devServer: {
+    port: 9000,
+    contentBase: buildPath,
+    hot: true,
+  },
   entry: "./src/lib/index.js",
   output: {
-    filename: "[name].[contenthash].js",
+    filename: !devMode ? "[name].[contenthash].js" : "[name].js",
     path: buildPath,
   },
   resolve: {
-    modules: 'node_modules',
+    modules: ['node_modules'],
   },
   //
   // Optimization Configuration
@@ -125,7 +133,7 @@ module.exports = {
         test: /\.(png|jpg|gif|svg)$/i,
         type: "asset/resource",
         generator: {
-          filename: '[name].[hash:7][ext]'
+          filename: !devMode ? "[name].[hash:7][ext]" : "[name][ext]",
         }
       }
     ],
