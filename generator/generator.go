@@ -12,7 +12,6 @@ const (
 )
 
 func main() {
-
 	out, err := os.Create(outDir + "index.html")
 	checkForErrors(err)
 	defer out.Close()

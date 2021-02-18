@@ -9,7 +9,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const { ProgressPlugin, HotModuleReplacementPlugin } = webpack;
 
-const devMode = process.env.NODE_ENV !== 'production';
 const buildPath = path.resolve(__dirname, 'build')
 
 const plugins = [
@@ -25,19 +24,17 @@ const plugins = [
   })
 ];
 
-if (devMode) {
-  plugins.push(new HotModuleReplacementPlugin());
-}
-
 module.exports = {
   plugins,
   devtool: "eval-cheap-module-source-map",
-  entry: "./src/index.js",
+  entry: "./src/lib/index.js",
   output: {
     filename: "[name].[contenthash].js",
     path: buildPath,
   },
-
+  resolve: {
+    modules: 'node_modules',
+  },
   //
   // Optimization Configuration
   //
